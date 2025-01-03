@@ -75,26 +75,26 @@ async def confirm_booking(update: Update, context: ContextTypes.DEFAULT_TYPE):
         input_text = update.message.text.strip()
 
         # Обработка кнопок
-        if input_text == "Выбрать другое время":
+        if input_text == "Вибрати інший час":
             await update.message.reply_text(
-                "Пожалуйста, введите время в формате ЧЧ:ММ ЧЧ:ММ, где ЧЧ — часы (00–24), ММ — минуты (00–59)."
+                "Будь ласка, введіть час у форматі ГГ:ХХ ГГ:ХХ, де ГГ - години (00-24), ХХ - хвилини (00-59)."
             )
             return CONFIRM
-        elif input_text == "Выбрать другую дату":
+        elif input_text == "Вибрати іншу дату":
             calendar, step = DetailedTelegramCalendar(min_date=datetime.today()).build()
             await update.message.reply_text(
-                f"Выберите {step}:",
+                f"Виберіть {step}:",
                 reply_markup=calendar
             )
             return DATE_TIME
-        elif input_text == "Посмотреть все бронирования":
+        elif input_text == "Переглянути всі бронювання":
             return await all_bookings(update, context)
 
         # Проверка формата времени
         time_pattern = r"^(?:[01]\d|2[0-3]):[0-5]\d (?:[01]\d|2[0-3]):[0-5]\d$"
         if not re.match(time_pattern, input_text):
             await update.message.reply_text(
-                "Ошибка формата. Укажите время в формате ЧЧ:ММ ЧЧ:ММ, где ЧЧ — часы (00–24), ММ — минуты (00–59)."
+                "Помилка формату. Вкажіть час у форматі ГГ:ХХ ГГ:ХХ, де ГГ - години (00-24), ХХ - хвилини (00-59)."
             )
             return CONFIRM
 
@@ -125,13 +125,13 @@ async def confirm_booking(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Обработка результата
         if conflicting_bookings:
             keyboard = [
-                ["Выбрать другое время"],
-                ["Выбрать другую дату"],
-                ["Посмотреть все бронирования"]
+                ["Вибрати інший час"],
+                ["Вибрати іншу дату"],
+                ["Переглянути всі бронювання"]
             ]
             reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
             await update.message.reply_text(
-                "Выбранное время уже занято. Попробуйте другое время или дату:",
+                "Вибраний час вже зайнятий. Спробуйте інший час або дату:",
                 reply_markup=reply_markup
             )
             return CONFIRM
@@ -148,9 +148,9 @@ async def confirm_booking(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
         )
         conn.commit()
-        await update.message.reply_text("Бронирование подтверждено!")
+        await update.message.reply_text("Бронювання підтверджено!")
     except Exception as e:
-        await update.message.reply_text("Произошла ошибка. Попробуйте еще раз.")
+        await update.message.reply_text("Сталася помилка. Спробуйте ще раз.")
         print(e)
         return CONFIRM
     return ConversationHandler.END
