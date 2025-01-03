@@ -6,6 +6,10 @@ from telegram_bot_calendar import DetailedTelegramCalendar
 from datetime import datetime
 import re
 import sqlite3
+import os
+
+
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 
 # Создаем и инициализируем базу данных
 conn = sqlite3.connect('bbq_bookings.db')
@@ -213,7 +217,7 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return await cancel_booking(update, context)
 
 # Основной код
-application = Application.builder().token("").build()
+application = Application.builder().token(TELEGRAM_TOKEN).build()
 
 conv_handler = ConversationHandler(
     entry_points=[MessageHandler(filters.Regex("^(Бронювати|Мої бронювання|Усі бронювання|Скасувати бронювання)$"), handle_buttons)],
